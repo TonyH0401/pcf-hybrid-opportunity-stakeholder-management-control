@@ -25,10 +25,10 @@
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects
     from CDS -->
-    <property name="sampleProperty" display-name-key="Display Name 1"
-      description-key="Description 1" of-type="SingleLine.Text" usage="bound" required="false" />
-    <property name="sampleText" display-name-key="Display Name 2"
-      description-key="Description 2" of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="sampleProperty" display-name-key="Opportunity Topic Name"
+      description-key="The name of the Opportunity" of-type="SingleLine.Text" usage="bound" required="false" />
+    <property name="sampleText" display-name-key="Opportunity GUID"
+      description-key="The GUID of the Opportunity" of-type="SingleLine.Text" usage="bound" required="true" />
     <!--
       Property node's of-type attribute can be of-type-group attribute.
       Example:
