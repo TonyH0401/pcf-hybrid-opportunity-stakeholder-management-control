@@ -111,6 +111,12 @@ async function triggerRelateRowFlow(URL: string, body: RequestBody) {
     return [];
   }
 }
+// Sort the list by 'Name'from A-Z
+const sortListByNameAZ = (a: unknown, b: unknown) => {
+  const nameA = (a as { crff8_name?: string }).crff8_name?.toLowerCase() || "";
+  const nameB = (b as { crff8_name?: string }).crff8_name?.toLowerCase() || "";
+  return nameA.localeCompare(nameB);
+};
 
 // ============================================
 // Main Component Section (this is where the magic begin)
@@ -177,17 +183,22 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   // Compute filtered items (with useMemo) whenever 'searchText' or 'scContacts' changes
   const filteredItems = React.useMemo(() => {
     const term = searchText.trim().toLowerCase();
-    if (!term) return Stakeholders as unknown[];
-    return (Stakeholders as unknown[]).filter((item) => {
-      const stakeholder = item as {
-        crff8_name?: string;
-        crff8_stakeholderid?: string;
-      };
-      return (
-        stakeholder.crff8_name?.toLowerCase().includes(term) || // Match on name or number
-        stakeholder.crff8_stakeholderid?.toLowerCase().includes(term)
-      );
-    });
+    if (!term) {
+      return (Stakeholders as unknown[]).slice().sort(sortListByNameAZ);
+    }
+    return (Stakeholders as unknown[])
+      .filter((item) => {
+        const stakeholder = item as {
+          crff8_name?: string;
+          crff8_stakeholderid?: string;
+        };
+        return (
+          stakeholder.crff8_name?.toLowerCase().includes(term) || // Match on name or number
+          stakeholder.crff8_stakeholderid?.toLowerCase().includes(term)
+        );
+      })
+      .slice()
+      .sort(sortListByNameAZ);
   }, [searchText, Stakeholders]); // Dependency array, if any of these variables change, it triggers this function, idk how to explain further
   // Create (many-many) associate between ScAccount and ScContact via button click
   const handleGetSelectedId = async () => {
