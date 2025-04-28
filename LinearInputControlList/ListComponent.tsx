@@ -112,7 +112,7 @@ async function triggerRelateRowFlow(URL: string, body: RequestBody) {
     return [];
   }
 }
-// Sort the list by 'Name'from A-Z
+// Sort the list by 'Name' from A-Z
 const sortListByNameAZ = (a: unknown, b: unknown) => {
   const nameA = (a as { crff8_name?: string }).crff8_name?.toLowerCase() || "";
   const nameB = (b as { crff8_name?: string }).crff8_name?.toLowerCase() || "";
@@ -183,7 +183,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   // ---------------------------
   // Compute filtered items (with useMemo) whenever 'searchText' or 'scContacts' changes
   const filteredItems = React.useMemo(() => {
-    const term = searchText.trim().toLowerCase();
+    const term = searchText.trim().toLowerCase(); // Get the search term from 'searchText'
     if (!term) {
       return (Stakeholders as unknown[]).slice().sort(sortListByNameAZ);
     }
@@ -353,6 +353,15 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
           selectionPreservedOnEmptyClick={true}
           selectionMode={SelectionMode.multiple}
         />
+      </div>
+      {/* Divider*/}
+      <div style={{ borderTop: "1px solid #ccc", margin: "12px 0" }}></div>
+      {/* Row count section*/}
+      <div
+        style={{ textAlign: "left", marginTop: "12px", marginBottom: "12px" }}
+      >
+        {/* This line shows the row count */}
+        <p style={{ margin: 0 }}>Rows: {filteredItems.length}</p>
       </div>
       {/* Button */}
       <div
