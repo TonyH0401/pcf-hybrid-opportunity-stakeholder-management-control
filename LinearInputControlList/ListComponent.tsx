@@ -73,6 +73,7 @@ async function fetchStakeholdersDataAssociateNot(
             <entity name='crff8_stakeholder'>
               <attribute name='crff8_stakeholderid' />
               <attribute name='crff8_name' />
+              <attribute name='crff8_contactinfo' />
               <link-entity name='crff8_stakeholder_opportunity'
                           from='crff8_stakeholderid'
                           to='crff8_stakeholderid'
@@ -260,6 +261,14 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     },
     {
       key: "column2",
+      name: "Contact Info",
+      fieldName: "crff8_contactinfo", // This is where the data is mapped based on the column name/logical name
+      minWidth: 150,
+      maxWidth: 300,
+      isResizable: true,
+    },
+    {
+      key: "column3",
       name: "GUID",
       fieldName: "crff8_stakeholderid", // This is where the data is mapped based on the column name/logical name
       minWidth: 150,
