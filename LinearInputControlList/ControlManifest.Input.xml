@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest>
-  <control namespace="SampleNamespace" constructor="LinearInputControl" version="0.0.1"
-    display-name-key="LinearInputControl" description-key="LinearInputControl description"
+  <control namespace="SampleNamespace" constructor="LinearInputControlList" version="0.0.1"
+    display-name-key="LinearInputControlList" description-key="LinearInputControlList description"
     control-type="standard">
     <!--external-service-usage
     node declares whether this 3rd party PCF control is using external service or not, if yes, this

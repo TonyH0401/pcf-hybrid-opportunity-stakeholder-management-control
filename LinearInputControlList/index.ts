@@ -3,7 +3,7 @@ import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import ListComponentControl from "./ListComponent";
-export class LinearInputControl
+export class LinearInputControlList
   implements ComponentFramework.StandardControl<IInputs, IOutputs>
 {
   private _context: ComponentFramework.Context<IInputs>;
