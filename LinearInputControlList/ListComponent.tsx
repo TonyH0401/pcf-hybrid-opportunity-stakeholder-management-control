@@ -210,28 +210,28 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     // Calling PA, careful because PA only has success cases, will create error handler in PA or in here
     console.log("> Opportunity GUID: ", context?.parameters?.sampleText.raw);
     console.log("> Selected stakeholders: ", stakeholderIds);
-    // setIsLoading(true);
-    // try {
-    //   const URL =
-    //     "https://prod-93.southeastasia.logic.azure.com:443/workflows/df69e34664594b6ea57ad0c950ad0b00/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BzQUHRqXsDKh2Qq8MukIbKCERx1V19x2Tiv6FRgHqOg";
-    //   const body = JSON.stringify({
-    //     account: context?.parameters?.sampleText.raw,
-    //     contact: contactIds,
-    //   });
-    //   const response = await fetch(URL, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: body,
-    //   });
-    //   const data = await response.json();
-    //   console.log("Success", data);
-    //   location.reload();
-    // } catch (error) {
-    //   console.error(`❌ Failed to link contact`, error);
-    //   console.log(error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    setIsLoading(true);
+    try {
+      const URL =
+        "https://prod-27.southeastasia.logic.azure.com:443/workflows/9a095ece2f71414ba3244cab5bd7d913/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WvGhPBthO8aeiAFQYWY7d6QuI57U0AThSpSm0-eGgVY";
+      const body = JSON.stringify({
+        opportunity: context?.parameters?.sampleText.raw,
+        stakeholder: stakeholderIds,
+      });
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: body,
+      });
+      const data = await response.json();
+      console.log("> Success", data);
+      location.reload();
+    } catch (error) {
+      console.log(`❌ Failed to link contact`, error);
+      console.error(`❌ Failed to link contact`, error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // ---------------------------
@@ -302,7 +302,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     <div style={{ padding: "16px" }}>
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h3 style={{ margin: 0 }}>Danh sách: {title}</h3>
+        <h3 style={{ margin: 0 }}>Opportunity Topic Name: {title}</h3>
         <p style={{ margin: 0 }}>Record ID: {value}</p>
       </div>
       {/* Search box */}
