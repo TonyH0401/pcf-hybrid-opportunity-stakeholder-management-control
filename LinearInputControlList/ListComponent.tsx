@@ -63,38 +63,39 @@ Originally, it was "Fetch ScContact Data where ScContact IS associated with ScAc
 it turned in to "Fetch ScContact Data where ScContact IS associated with OTHER ScAccount BUT NOT with the given ScAccount GUID via association table",
 so I need to find another way which is this way below. 
 */
-async function fetchScContactsDataAssociateNot(
+async function fetchStakeholdersDataAssociateNot(
   context: ComponentFramework.Context<IInputs>
 ) {
   try {
-    const scAccountGUID = context.parameters.sampleText.raw;
-    console.log(`ScAccount GUID Value: ${scAccountGUID}`);
+    const OpportunityGUID = context.parameters.sampleText.raw;
+    console.log(`> Opportunity GUID Value: ${OpportunityGUID}`);
     const fetchXML = `<fetch>
-            <entity name='crff8_sccontact'>
-              <attribute name='crff8_sccontactid' />
-              <attribute name='crff8_sccontactnumber' />
-              <link-entity name='crff8_sccontact_crff8_scaccount'
-                          from='crff8_sccontactid'
-                          to='crff8_sccontactid'
+            <entity name='crff8_stakeholder'>
+              <attribute name='crff8_stakeholderid' />
+              <attribute name='crff8_name' />
+              <link-entity name='crff8_stakeholder_opportunity'
+                          from='crff8_stakeholderid'
+                          to='crff8_stakeholderid'
                           link-type='outer'
                           alias='link'>
                 <filter type='and'>
-                  <condition attribute='crff8_scaccountid' operator='eq' value='${scAccountGUID}' />
+                  <condition attribute='opportunityid' operator='eq' value='${OpportunityGUID}' />
                 </filter>
               </link-entity>
               <filter type='and'>
-                <condition entityname='link' attribute='crff8_scaccountid' operator='null' />
+                <condition entityname='link' attribute='opportunityid' operator='null' />
               </filter>
             </entity>
           </fetch>`;
     const encodedFetchXML = encodeURIComponent(fetchXML);
     const result = await context.webAPI.retrieveMultipleRecords(
-      "crff8_sccontact",
+      "crff8_stakeholder",
       `?fetchXml=${encodedFetchXML}`
     );
-    console.log("sccontact associate not:", result.entities);
+    console.log("> Stakeholder associate not:", result.entities);
     return result.entities;
   } catch (error) {
+    console.log(">> Error retrieving sccontact associate records:", error);
     console.error("Error retrieving sccontact associate records:", error);
     return [];
   }
@@ -125,13 +126,13 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     { id: 3, name: "Alice Johnson" },
     { id: 4, name: "Bob Brown" },
   ];
-  
+
   // ---------------------------
   // State Variables (initialize "state" to hold and set/change value)
   // ---------------------------
   const [searchText, setSearchText] = React.useState<string>(""); // State to hold "searchText" and "setSearchText", no initial value
   const [scAccounts, setScAccounts] = React.useState<unknown[]>([]); // State to hold "scAccounts" and "setScAccounts", no initial value
-  const [scContacts, setScContacts] = React.useState<unknown[]>([]);
+  const [Stakeholders, setStakeholders] = React.useState<unknown[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [selection] = React.useState(
     new Selection({
@@ -153,8 +154,8 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   React.useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      const contacts = await fetchScContactsDataAssociateNot(context);
-      setScContacts(contacts);
+      const stakeholders = await fetchStakeholdersDataAssociateNot(context);
+      setStakeholders(stakeholders);
       setIsLoading(false);
     };
     loadData();
@@ -176,61 +177,61 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   // Compute filtered items (with useMemo) whenever 'searchText' or 'scContacts' changes
   const filteredItems = React.useMemo(() => {
     const term = searchText.trim().toLowerCase();
-    if (!term) return scContacts as unknown[];
-    return (scContacts as unknown[]).filter((item) => {
-      const contact = item as {
-        crff8_sccontactnumber?: string;
-        crff8_sccontactid?: string;
+    if (!term) return Stakeholders as unknown[];
+    return (Stakeholders as unknown[]).filter((item) => {
+      const stakeholder = item as {
+        crff8_name?: string;
+        crff8_stakeholderid?: string;
       };
       return (
-        contact.crff8_sccontactnumber?.toLowerCase().includes(term) || // Match on name or number
-        contact.crff8_sccontactid?.toLowerCase().includes(term)
+        stakeholder.crff8_name?.toLowerCase().includes(term) || // Match on name or number
+        stakeholder.crff8_stakeholderid?.toLowerCase().includes(term)
       );
     });
-  }, [searchText, scContacts]); // Dependency array, if any of these variables change, it triggers this function, idk how to explain further
+  }, [searchText, Stakeholders]); // Dependency array, if any of these variables change, it triggers this function, idk how to explain further
   // Create (many-many) associate between ScAccount and ScContact via button click
   const handleGetSelectedId = async () => {
     const selectedItems = selection.getSelection();
     // Throw an alert when the button is clicked with no selected row
     if (selectedItems.length === 0) {
-      alert("Vui lòng chọn một dòng.");
+      alert("Warning: No row is selected. Please select a row.");
       return;
     }
     // Extract the GUID ONLY from the contact object
-    const contactIds = selectedItems
+    const stakeholderIds = selectedItems
       .map((item) => {
-        const contact = item as {
-          crff8_sccontactid?: string;
-          crff8_sccontactnumber?: string;
+        const stakeholder = item as {
+          crff8_name?: string;
+          crff8_stakeholderid?: string;
         };
-        return contact.crff8_sccontactid;
+        return stakeholder.crff8_stakeholderid;
       })
       .filter((id): id is string => !!id);
     // Calling PA, careful because PA only has success cases, will create error handler in PA or in here
-    console.log("GUID: ", context?.parameters?.sampleText.raw);
-    console.log("Selected: ", contactIds);
-    setIsLoading(true);
-    try {
-      const URL =
-        "https://prod-93.southeastasia.logic.azure.com:443/workflows/df69e34664594b6ea57ad0c950ad0b00/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BzQUHRqXsDKh2Qq8MukIbKCERx1V19x2Tiv6FRgHqOg";
-      const body = JSON.stringify({
-        account: context?.parameters?.sampleText.raw,
-        contact: contactIds,
-      });
-      const response = await fetch(URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: body,
-      });
-      const data = await response.json();
-      console.log("Success", data);
-      location.reload();
-    } catch (error) {
-      console.error(`❌ Failed to link contact`, error);
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+    console.log("> Opportunity GUID: ", context?.parameters?.sampleText.raw);
+    console.log("> Selected stakeholders: ", stakeholderIds);
+    // setIsLoading(true);
+    // try {
+    //   const URL =
+    //     "https://prod-93.southeastasia.logic.azure.com:443/workflows/df69e34664594b6ea57ad0c950ad0b00/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BzQUHRqXsDKh2Qq8MukIbKCERx1V19x2Tiv6FRgHqOg";
+    //   const body = JSON.stringify({
+    //     account: context?.parameters?.sampleText.raw,
+    //     contact: contactIds,
+    //   });
+    //   const response = await fetch(URL, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: body,
+    //   });
+    //   const data = await response.json();
+    //   console.log("Success", data);
+    //   location.reload();
+    // } catch (error) {
+    //   console.error(`❌ Failed to link contact`, error);
+    //   console.log(error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   // ---------------------------
@@ -240,8 +241,8 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   const columns: IColumn[] = [
     {
       key: "column1",
-      name: "Number", // Display name
-      fieldName: "crff8_sccontactnumber", // This is where the data is mapped based on the column name/logical name
+      name: "Name", // Display name
+      fieldName: "crff8_name", // This is where the data is mapped based on the column name/logical name
       minWidth: 50,
       maxWidth: 100,
       isResizable: true,
@@ -249,7 +250,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     {
       key: "column2",
       name: "GUID",
-      fieldName: "crff8_sccontactid", // This is where the data is mapped based on the column name/logical name
+      fieldName: "crff8_stakeholderid", // This is where the data is mapped based on the column name/logical name
       minWidth: 150,
       maxWidth: 300,
       isResizable: true,
@@ -307,7 +308,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
       {/* Search box */}
       <div style={{ width: "100%", maxWidth: "600px", margin: "0 auto 12px" }}>
         <SearchBox
-          placeholder="Tìm theo Number hoặc GUID..."
+          placeholder="Tìm theo Name hoặc GUID..."
           value={searchText} // This is for displaying UI only
           onChange={(_, newValue) => setSearchText(newValue || "")} // When the user change any values, it will update 'searchText'
           underlined={false}
@@ -338,7 +339,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
         style={{ textAlign: "center", marginTop: "12px", marginBottom: "12px" }}
       >
         <PrimaryButton
-          text="Lấy GUID từ dòng được chọn"
+          text="Get the GUID from selected row(s)"
           onClick={handleGetSelectedId}
         />
       </div>
