@@ -224,8 +224,25 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     console.log("> Selected stakeholders: ", stakeholderIds);
     setIsLoading(true);
     try {
-      const URL =
-        "https://prod-27.southeastasia.logic.azure.com:443/workflows/9a095ece2f71414ba3244cab5bd7d913/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WvGhPBthO8aeiAFQYWY7d6QuI57U0AThSpSm0-eGgVY";
+      // Get the Env Var for the Associate Flow
+      const envVarGuidResult = await context.webAPI.retrieveMultipleRecords(
+        "environmentvariabledefinition",
+        "?$filter=schemaname eq 'crff8_AssociateFlow'&$select=schemaname,environmentvariabledefinitionid"
+      );
+      if (envVarGuidResult.entities.length == 0) {
+        throw new Error("Associate Flow Guid is empty!!!");
+      }
+      const envVarGuid =
+        envVarGuidResult.entities[0]?.environmentvariabledefinitionid;
+      const result = await context.webAPI.retrieveMultipleRecords(
+        "environmentvariablevalue",
+        `?$filter=_environmentvariabledefinitionid_value eq '${envVarGuid}'&$select=schemaname,value`
+      );
+      const envVarValue = result.entities[0].value;
+      console.log("Env Var Associate Flow: ", envVarValue);
+
+      const URL = envVarValue;
+      // "https://prod-27.southeastasia.logic.azure.com:443/workflows/9a095ece2f71414ba3244cab5bd7d913/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WvGhPBthO8aeiAFQYWY7d6QuI57U0AThSpSm0-eGgVY";
       const body = JSON.stringify({
         opportunity: context?.parameters?.sampleText.raw,
         stakeholder: stakeholderIds,
