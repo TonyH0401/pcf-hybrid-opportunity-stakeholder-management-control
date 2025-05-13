@@ -100,18 +100,16 @@ async function fetchStakeholdersNotAssociateOpportunity(
   }
 }
 // Create an HTTP fetch to the Power Automate to run the native 'Relate Row' action (not a Custom Action)
-/* 
-This Power Automate Flow is called 'flow-test-code-2' and it doesn't have an error case, will add it later or handle error case via code in here
-*/
 async function triggerRelateRowFlow(URL: string, body: RequestBody) {
+  /* This Power Automate Flow is called 'flow-test-code-2' and it doesn't have an error case, will add it later or handle error case via code in here */
   try {
     return [];
   } catch (error) {
     return [];
   }
 }
-// Sort the list by 'Name' from A-Z
-const sortListByNameAZ = (a: unknown, b: unknown) => {
+// Sort the 'Stakeholders' list by the 'Name' property from A-Z
+const sortStakeholderListByNameAsc = (a: unknown, b: unknown) => {
   const nameA = (a as { crff8_name?: string }).crff8_name?.toLowerCase() || "";
   const nameB = (b as { crff8_name?: string }).crff8_name?.toLowerCase() || "";
   return nameA.localeCompare(nameB);
@@ -183,7 +181,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   const filteredItems = React.useMemo(() => {
     const term = searchText.trim().toLowerCase(); // Get the search term from 'searchText'
     if (!term) {
-      return (Stakeholders as unknown[]).slice().sort(sortListByNameAZ);
+      return (Stakeholders as unknown[]).slice().sort(sortStakeholderListByNameAsc);
     }
     return (Stakeholders as unknown[])
       .filter((item) => {
@@ -197,7 +195,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
         );
       })
       .slice()
-      .sort(sortListByNameAZ);
+      .sort(sortStakeholderListByNameAsc);
   }, [searchText, Stakeholders]); // Dependency array, if any of these variables change, it triggers this function, idk how to explain further
   // Create (many-many) associate between ScAccount and ScContact via button click
   const handleGetSelectedId = async () => {
