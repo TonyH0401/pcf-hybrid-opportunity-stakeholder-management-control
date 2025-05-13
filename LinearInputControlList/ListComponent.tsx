@@ -329,7 +329,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
       isResizable: true,
     },
   ];
-  // The main lsit component
+  // The main list component
   return (
     <div style={{ padding: "16px" }}>
       {/* Header */}
@@ -368,14 +368,13 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
       </div>
       {/* Divider*/}
       <div style={{ borderTop: "1px solid #ccc", margin: "12px 0" }}></div>
-      {/* Row count section*/}
+      {/* Display row count section*/}
       <div
         style={{ textAlign: "left", marginTop: "12px", marginBottom: "12px" }}
       >
-        {/* This line shows the row count */}
         <p style={{ margin: 0 }}>Rows: {filteredItems.length}</p>
       </div>
-      {/* Button */}
+      {/* Associate Stakholders and Opportunity button */}
       <div
         style={{ textAlign: "center", marginTop: "12px", marginBottom: "12px" }}
       >
