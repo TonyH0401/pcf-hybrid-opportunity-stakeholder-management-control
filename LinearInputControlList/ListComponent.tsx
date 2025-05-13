@@ -1,3 +1,6 @@
+// ============================================
+// 🔻 Import Libraries Section
+// ============================================
 import * as React from "react";
 // import fetch from "node-fetch";
 import { IInputs } from "./generated/ManifestTypes";
@@ -12,7 +15,7 @@ import {
 } from "@fluentui/react";
 
 // ============================================
-// Type Declarations Section
+// 🔻 Type Declarations Section
 // ============================================
 // Declare 'DummyData' type (to be deleted)
 interface DummyData {
@@ -26,7 +29,7 @@ interface RequestBody {
 }
 
 // ============================================
-// Component Input Interface Section (pass data using 'context' keyword)
+// 🔻 Component Input Interface Section (pass data and arguments using the 'context' keyword)
 // ============================================
 /* 
 Video: https://youtu.be/R1hTz-T5feQ?si=JAccsVjHru1K8hZl.
@@ -38,7 +41,7 @@ interface ListComponentControlProps {
 }
 
 // ============================================
-// Functions Section (will soon be moved to a file)
+// 🔻 Functions Section (will soon be moved to a file)
 // ============================================
 // Fetch ScAccount Data
 async function fetchScAccountsData(
@@ -120,7 +123,7 @@ const sortListByNameAZ = (a: unknown, b: unknown) => {
 };
 
 // ============================================
-// Main Component Section (this is where the magic begin)
+// 🔻 Main Component Section (this is where the magic begin)
 // ============================================
 const ListComponentControl: React.FC<ListComponentControlProps> = ({
   context,
@@ -394,6 +397,6 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
 };
 
 // ============================================
-// Export Component
+// 🔻 Export Component
 // ============================================
 export default ListComponentControl;
