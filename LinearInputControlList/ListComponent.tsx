@@ -1,5 +1,5 @@
 // ============================================
-// 🔻 Import Libraries Section
+// 🔻 Import Library Section
 // ============================================
 import * as React from "react";
 // import fetch from "node-fetch";
@@ -15,29 +15,26 @@ import {
 } from "@fluentui/react";
 
 // ============================================
-// 🔻 Type Declarations Section
+// 🔻 Type & Constant Declaration Section
 // ============================================
-// Declare 'DummyData' type (to be deleted)
+// Declare constant: 'ListComponent' input interface as 'ListComponentControlProps' (pass data and arguments using the 'context' keyword)
+interface ListComponentControlProps {
+  /* Video: https://youtu.be/R1hTz-T5feQ?si=JAccsVjHru1K8hZl - With timestamp: https://youtu.be/R1hTz-T5feQ?si=RdgqpHUSRKN92i-1&t=649.
+  Chat: https://chatgpt.com/c/680890cf-ab18-8010-ad6e-d31757052e66. Scroll to the way top for the info.
+  Chat: https://chatgpt.com/share/6822fb10-89a8-8010-9671-269d0a562c3e. Scroll to the way top for the info, shared version.
+  Result: https://dev.azure.com/NhanLeChinh/Pipeline%20Testing/_git/Pipeline%20Testing/commit/921b3a524242e1d5f1558c493c1e98a3ee453bc2?refName=refs/heads/phu-pcf-demo. */
+  context: ComponentFramework.Context<IInputs>;
+  notifyOutputChanged: () => void;
+}
+// Declare type: 'DummyData' (to be deleted)
 interface DummyData {
   id: number;
   name: string;
 }
-// Declare 'RequestBody' type
+// Declare type: 'RequestBody'
 interface RequestBody {
   account: string | undefined;
   contact: string[];
-}
-
-// ============================================
-// 🔻 Component Input Interface Section (pass data and arguments using the 'context' keyword)
-// ============================================
-/* 
-Video: https://youtu.be/R1hTz-T5feQ?si=JAccsVjHru1K8hZl.
-Chat: https://chatgpt.com/c/680890cf-ab18-8010-ad6e-d31757052e66. Scroll to the way top for the info
-*/
-interface ListComponentControlProps {
-  context: ComponentFramework.Context<IInputs>;
-  notifyOutputChanged: () => void;
 }
 
 // ============================================
@@ -60,15 +57,13 @@ async function fetchScAccountsData(
     return [];
   }
 }
-// Fetch ScContact Data where ScContact is NOT associated with ScAccount via association table
-/* 
-Originally, it was "Fetch ScContact Data where ScContact IS associated with ScAccount via association table", I changed operator from 'eq' to 'ne' but it didn't work,
-it turned in to "Fetch ScContact Data where ScContact IS associated with OTHER ScAccount BUT NOT with the given ScAccount GUID via association table",
-so I need to find another way which is this way below. 
-*/
+// Fetch "Stakeholders" where the "Stakeholders" are NOT associated with "Opportunity" via the association table
 async function fetchStakeholdersDataAssociateNot(
   context: ComponentFramework.Context<IInputs>
 ) {
+  /* Originally, it was "Fetch ScContact Data where ScContact IS associated with ScAccount via association table", I changed operator from 'eq' to 'ne' but it didn't work,
+  it turned in to "Fetch ScContact Data where ScContact IS associated with OTHER ScAccount BUT NOT with the given ScAccount GUID via association table",
+  so I need to find another way which is this way below. */
   try {
     const OpportunityGUID = context.parameters.sampleText.raw;
     console.log(`> Opportunity GUID Value: ${OpportunityGUID}`);
