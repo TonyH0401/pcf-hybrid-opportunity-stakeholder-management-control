@@ -58,7 +58,7 @@ async function fetchScAccountsData(
   }
 }
 // Fetch "Stakeholders" where the "Stakeholders" are NOT associated with "Opportunity" via the association table
-async function fetchStakeholdersDataAssociateNot(
+async function fetchStakeholdersNotAssociateOpportunity(
   context: ComponentFramework.Context<IInputs>
 ) {
   /* Originally, it was "Fetch ScContact Data where ScContact IS associated with ScAccount via association table", I changed operator from 'eq' to 'ne' but it didn't work,
@@ -159,7 +159,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   React.useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      const stakeholders = await fetchStakeholdersDataAssociateNot(context);
+      const stakeholders = await fetchStakeholdersNotAssociateOpportunity(context);
       setStakeholders(stakeholders);
       setIsLoading(false);
     };
