@@ -199,7 +199,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
       .slice()
       .sort(sortStakeholderListByNameAsc);
   }, [searchText, Stakeholders]); // Dependency array, if any of these variables change, it triggers this function, idk how to explain further
-  // Associate selected 'Stakeholders' with 'Opportunity' when a button is clicked
+  // Associate selected 'Stakeholders' with 'Opportunity' when a button is clicked, this function is triggered when the button is clicked
   const handleGetSelectedId = async () => {
     const selectedItems = selection.getSelection();
     // Throw an alert when the button is clicked with no selected row
@@ -261,38 +261,10 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     }
   };
 
-  // ---------- ➡️ Render Components ----------
-  // Configure column properties used in the component
-  const columns: IColumn[] = [
-    {
-      key: "column1",
-      name: "Name", // Display name
-      fieldName: "crff8_name", // This is where the data is mapped based on the column name/logical name
-      minWidth: 50,
-      maxWidth: 100,
-      isResizable: true,
-    },
-    {
-      key: "column2",
-      name: "Contact Info",
-      fieldName: "crff8_contactinfo", // This is where the data is mapped based on the column name/logical name
-      minWidth: 150,
-      maxWidth: 300,
-      isResizable: true,
-    },
-    {
-      key: "column3",
-      name: "GUID",
-      fieldName: "crff8_stakeholderid", // This is where the data is mapped based on the column name/logical name
-      minWidth: 150,
-      maxWidth: 300,
-      isResizable: true,
-    },
-  ];
-
+  // ---------- ➡️ Render component ----------
   const title = context?.parameters?.sampleProperty.raw ?? "Unknown Title";
   const value = context?.parameters?.sampleText.raw ?? "Unknown Value";
-  // The "loading overlay" component
+  // The "Loading Overlay" component
   if (isLoading) {
     return (
       <div
@@ -330,7 +302,34 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
       </div>
     );
   }
-  // Main component
+  // Configure column properties used in the list component
+  const columns: IColumn[] = [
+    {
+      key: "column1",
+      name: "Name", // Display name
+      fieldName: "crff8_name", // This is where the data is mapped based on the column name/logical name
+      minWidth: 50,
+      maxWidth: 100,
+      isResizable: true,
+    },
+    {
+      key: "column2",
+      name: "Contact Info",
+      fieldName: "crff8_contactinfo", // This is where the data is mapped based on the column name/logical name
+      minWidth: 150,
+      maxWidth: 300,
+      isResizable: true,
+    },
+    {
+      key: "column3",
+      name: "GUID",
+      fieldName: "crff8_stakeholderid", // This is where the data is mapped based on the column name/logical name
+      minWidth: 150,
+      maxWidth: 300,
+      isResizable: true,
+    },
+  ];
+  // The main lsit component
   return (
     <div style={{ padding: "16px" }}>
       {/* Header */}
