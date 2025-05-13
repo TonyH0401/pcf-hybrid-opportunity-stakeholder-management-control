@@ -122,7 +122,8 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
   context,
   notifyOutputChanged,
 }) => {
-  // Initialize dummy data with data (to be deleted)
+  // ---------- ➡️ Initialize variable ----------
+  // Initialize dummyData for table (to be deleted)
   const dummyData: DummyData[] = [
     { id: 1, name: "John Doe" },
     { id: 2, name: "Jane Smith" },
@@ -130,9 +131,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     { id: 4, name: "Bob Brown" },
   ];
 
-  // ---------------------------
-  // State Variables (initialize "state" to hold and set/change value)
-  // ---------------------------
+  // ---------- ➡️ State variable (initialize "state" to hold and set/change value) ----------
   const [searchText, setSearchText] = React.useState<string>(""); // State to hold "searchText" and "setSearchText", no initial value
   const [scAccounts, setScAccounts] = React.useState<unknown[]>([]); // State to hold "scAccounts" and "setScAccounts", no initial value
   const [Stakeholders, setStakeholders] = React.useState<unknown[]>([]);
@@ -153,11 +152,14 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     })
   );
 
-  // Run once when the page is render and run twice when context is updated (context is updated when the page is reloaded)
+  // ---------- ➡️ useEffect ----------
+  // This 'useEffect' runs once when the page is rendered and runs twice when 'context' is updated ('context' is updated when the page is reloaded)
   React.useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      const stakeholders = await fetchStakeholdersNotAssociateOpportunity(context);
+      const stakeholders = await fetchStakeholdersNotAssociateOpportunity(
+        context
+      );
       setStakeholders(stakeholders);
       setIsLoading(false);
     };
@@ -174,14 +176,14 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     // loadData();
   }, [context]);
 
-  // ---------------------------
-  // Event Handlers
-  // ---------------------------
-  // Compute filtered items (with useMemo) whenever 'searchText' or 'scContacts' changes
+  // ---------- ➡️ Event handler ----------
+  // Compute filtered items with 'useMemo()' whenever 'searchText' or 'scContacts' changes only
   const filteredItems = React.useMemo(() => {
     const term = searchText.trim().toLowerCase(); // Get the search term from 'searchText'
     if (!term) {
-      return (Stakeholders as unknown[]).slice().sort(sortStakeholderListByNameAsc);
+      return (Stakeholders as unknown[])
+        .slice()
+        .sort(sortStakeholderListByNameAsc);
     }
     return (Stakeholders as unknown[])
       .filter((item) => {
@@ -197,7 +199,7 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
       .slice()
       .sort(sortStakeholderListByNameAsc);
   }, [searchText, Stakeholders]); // Dependency array, if any of these variables change, it triggers this function, idk how to explain further
-  // Create (many-many) associate between ScAccount and ScContact via button click
+  // Associate selected 'Stakeholders' with 'Opportunity' when a button is clicked
   const handleGetSelectedId = async () => {
     const selectedItems = selection.getSelection();
     // Throw an alert when the button is clicked with no selected row
@@ -259,10 +261,8 @@ const ListComponentControl: React.FC<ListComponentControlProps> = ({
     }
   };
 
-  // ---------------------------
-  // Render Components
-  // ---------------------------
-  // Define columns used in the component
+  // ---------- ➡️ Render Components ----------
+  // Configure column properties used in the component
   const columns: IColumn[] = [
     {
       key: "column1",
