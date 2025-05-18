@@ -1,29 +1,27 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Introduction
+
+A **hybrid** PCF control with FluentUI for managing Opportunity & Stakeholder relationship in **Sales Configuration** Solution - **Sales Hub** Customize Application.
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Build the PCF: `npm run build`.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Run the PCF in local (with watch like `nodemon`): `npm run start:watch`.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Publish/Deploy the PCF control: `pac pcf push --publisher-prefix <your publisher prefix>`.
 
-# Note
+- https://learn.microsoft.com/en-us/power-apps/developer/component-framework/import-custom-controls#deploying-code-components.
+- Make sure you are in the correct account and environment, star the account and environment to select them.
+- For managed solution, remember to change the version in the manifest file before you build and deploy.
+
+# Development Note
+
+_Ordered from newest to oldest_
 
 These are the files you will modify and need to be careful about: `manifest`, `manifest type` and `index`. The `manifest` file is the file where you define input for the data input field, add tools with `webAPI`, `utility`, etc.
 
 In `index.ts` there are 4 parts:
+
 - `init()` runs once when the app is initialized to initialize the properties.
 - `updateView()` runs when any data is updated
 - `getOutputs()` gets the output...tbc
