@@ -4,6 +4,8 @@ A **hybrid** PCF control with FluentUI for managing Opportunity & Stakeholder re
 
 # Getting Started
 
+Install the dependencies: `npm install`.
+
 Build the PCF: `npm run build`.
 
 Run the PCF in local (with watch like `nodemon`): `npm run start:watch`.
