@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "opportunity": {
+      "type": "string"
+    },
+    "stakeholder": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
